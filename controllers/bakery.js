@@ -3,17 +3,16 @@ const { validationResult } = require("express-validator/check");
 const Cake = require("../models/cake");
 
 exports.getCakes = (req, res, next) => {
-  res.status(200).json({
-    posts: [
-      {
-        id: "1",
-        name: "First Cake",
-        comment: "This is the first cake",
-        imageUrl: "images/cake.jpg",
-        yumFactor: "5",
-      },
-    ],
-  });
+  Cake.find()
+    .then((cakes) => {
+      res.status(200).json({ message: "Found some cakes.", cakes: cakes });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
 };
 
 exports.createCake = (req, res, next) => {
@@ -40,6 +39,25 @@ exports.createCake = (req, res, next) => {
         message: "Cake created successfully",
         post: result,
       });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getCake = (req, res, next) => {
+  const cakeId = req.params.cakeId;
+  Cake.findById(cakeId)
+    .then((cake) => {
+      if (!cake) {
+        const error = new Error("Could not find cake.");
+        error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ message: "Cake found.", cake: cake });
     })
     .catch((err) => {
       if (!err.statusCode) {
