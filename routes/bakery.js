@@ -12,12 +12,12 @@ router.get("/cakes", bakeryController.getCakes);
 router.post(
   "/cake",
   [
-      body("id").isInt(),
-      body("name").notEmpty().trim().isLength({ max: 30 }),
-      body("comment").notEmpty().trim().isLength({ max: 200 }),
-      body("imageUrl").notEmpty(),
-      body("yumFactor").isInt({ min: 0, max: 5}),
-    ],
+    body("id").isInt(),
+    body("name").notEmpty().trim().isLength({ max: 3 }),
+    body("comment").notEmpty().trim().isLength({ max: 200 }),
+    body("imageUrl").notEmpty(),
+    body("yumFactor").isInt({ min: 0, max: 5 }),
+  ],
   bakeryController.createCake
 );
 
