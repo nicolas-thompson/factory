@@ -22,9 +22,14 @@ exports.createCake = (req, res, next) => {
     error.statusCode = 422;
     throw error;
   }
+  if (!req.file) {
+    const error = new Error("No image provided.");
+    error.statusCode = 422;
+    throw error;
+  }
   const name = req.body.name;
   const comment = req.body.comment;
-  const imageUrl = req.body.imageUrl;
+  const imageUrl = req.file.path;
   const yumFactor = req.body.yumFactor;
   const cake = new Cake({
     name: name,
