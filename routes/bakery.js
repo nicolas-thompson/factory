@@ -31,4 +31,6 @@ router.put(
   bakeryController.updateCake
 );
 
+router.delete("/cake/:cakeId", bakeryController.deleteCake);
+
 module.exports = router;

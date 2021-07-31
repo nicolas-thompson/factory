@@ -123,6 +123,31 @@ exports.updateCake = (req, res, next) => {
     });
 };
 
+exports.deleteCake = (req, res, next) => {
+  const cakeId = req.params.cakeId;
+  Cake.findById(cakeId)
+    .then((cake) => {
+      if (!cake) {
+        const error = new Error("Could not find cake.");
+        console.log(error);
+        error.statusCode = 404;
+        throw error;
+      }
+      clearImage(cake.imageUrl);
+      return Cake.findByIdAndRemove(cakeId);
+    })
+    .then((result) => {
+      console.log(result);
+      res.status(200).json({ message: "Deleted post." });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 const clearImage = (filePath) => {
   filePath = path.join(__dirname, "..", filePath);
   fs.unlink(filePath, (err) => console.log(err));
